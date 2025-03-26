@@ -7,9 +7,10 @@ import {
 } from "../controllers/eventControllers";
 
 const router = express.Router();
-router.get('/events', getAllEvents);
-router.post('/events', createEvent);
-router.put('/events/:id', updateEvent);
-router.delete('/events/:id', deleteEvent);
+
+router.get('/', getAllEvents);
+router.post('/', createEvent);
+router.put('/:id', updateEvent);
+router.delete('/:id', deleteEvent);
 
 export default router;

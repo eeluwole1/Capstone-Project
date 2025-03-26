@@ -15,21 +15,21 @@ export const getAllEvents = (req: Request, res: Response): void => {
 // POST /events
 export const createEvent = (req: Request, res: Response): void => {
   const event = req.body.name;
-  const result = addEvent(event);
-  res.status(201).json({ message: result });
+  const newEvent = addEvent(event);
+  res.status(201).json({ message: "Event created", data: newEvent });
 };
 
 // PUT /events/:id
 export const updateEvent = (req: Request, res: Response): void => {
   const { id } = req.params;
   const event = req.body.name;
-  const result = modifyEvent(Number(id), event);
-  res.status(200).json({ message: result });
+  const updated = modifyEvent(Number(id), event);
+  res.status(200).json({ message: "Event updated", data: updated });
 };
 
 // DELETE /events/:id
 export const deleteEvent = (req: Request, res: Response): void => {
   const { id } = req.params;
-  const result = removeEvent(Number(id));
-  res.status(200).json({ message: result });
+  const deleted = removeEvent(Number(id));
+  res.status(200).json({ message: "Event deleted", data: deleted });
 };
