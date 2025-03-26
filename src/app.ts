@@ -1,6 +1,9 @@
 import express, { Express } from "express";
 import setupSwagger from "../config/swagger";
 
+
+import eventRoutes from "./api/v1/routes/eventRoutes";
+
 const app: Express = express();
 
 setupSwagger(app);
@@ -15,8 +18,14 @@ setupSwagger(app);
  *       200:
  *         description: A list of tasks
  */
-app.get("/tasks", (req, res) => {
-	res.send("Retrieve tasks");
+
+app.get("/api/v1/health", (req, res) => {
+    res.status(200).send("Server is healthy");
 });
+
+// Main API routes
+app.use("/api/v1/events", eventRoutes);
+
+
 
 export default app;
