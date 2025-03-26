@@ -4,19 +4,20 @@ import setupSwagger from "../config/swagger";
 
 import eventRoutes from "./api/v1/routes/eventRoutes";
 
+
 const app: Express = express();
 
 setupSwagger(app);
 
 /**
  * @openapi
- * /tasks:
+ * /events:
  *   get:
  *     summary: Retrieve a list of tasks
- *     tags: [Tasks]
+ *     tags: [Evnts]
  *     responses:
  *       200:
- *         description: A list of tasks
+ *         description: List of events
  */
 
 app.get("/api/v1/health", (req, res) => {
