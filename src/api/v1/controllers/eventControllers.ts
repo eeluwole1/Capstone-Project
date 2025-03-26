@@ -4,7 +4,7 @@ import {
   addEvent,
   modifyEvent,
   removeEvent,
-} from "../service/eventService";
+} from "../services/eventService";
 
 // GET /events
 export const getAllEvents = (req: Request, res: Response): void => {
