@@ -14,7 +14,7 @@ export const getAllEvents = (req: Request, res: Response): void => {
 
 // POST /events
 export const createEvent = (req: Request, res: Response): void => {
-  const event = req.body.name; // Adjust as needed
+  const event = req.body.name;
   const result = addEvent(event);
   res.status(201).json({ message: result });
 };
