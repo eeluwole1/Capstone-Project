@@ -1,34 +1,29 @@
-import express, { Express } from "express";
+import express from "express";
 import {
-  getAllEvents,
-  createEvent,
-  updateEvent,
-  deleteEvent
-} from "../controllers/eventControllers";
+  getAllUsers,
+  createUser,
+  updateUser,
+  deleteUser
+} from "../controllers/userController";
 
 const router = express.Router();
-
-router.get('/', getAllEvents);
-router.post('/', createEvent);
-router.put('/:id', updateEvent);
-router.delete('/:id', deleteEvent);
 
 /**
  * @openapi
  * tags:
- *   name: Events
- *   description: API for managing music events
+ *   name: Users
+ *   description: API for managing users (organizers, attendees, artists)
  */
 
 /**
  * @openapi
- * /events:
+ * /users:
  *   get:
- *     summary: Get all events
- *     tags: [Events]
+ *     summary: Get all users
+ *     tags: [Users]
  *     responses:
  *       200:
- *         description: List of events
+ *         description: List of users
  *         content:
  *           application/json:
  *             schema:
@@ -39,17 +34,16 @@ router.delete('/:id', deleteEvent);
  *                 data:
  *                   type: array
  *                   items:
- *                     $ref: '#/components/schemas/Event'
+ *                     $ref: '#/components/schemas/User'
  */
-router.get('/', getAllEvents);
-
+router.get('/', getAllUsers);
 
 /**
  * @openapi
- * /events:
+ * /users:
  *   post:
- *     summary: Create a new event
- *     tags: [Events]
+ *     summary: Create a new user
+ *     tags: [Users]
  *     requestBody:
  *       required: true
  *       content:
@@ -58,13 +52,21 @@ router.get('/', getAllEvents);
  *             type: object
  *             required:
  *               - name
+ *               - email
+ *               - role
  *             properties:
  *               name:
  *                 type: string
- *                 example: Jazz Night
+ *                 example: Jane Doe
+ *               email:
+ *                 type: string
+ *                 example: jane@example.com
+ *               role:
+ *                 type: string
+ *                 example: organizer
  *     responses:
  *       201:
- *         description: Event created successfully
+ *         description: User created successfully
  *         content:
  *           application/json:
  *             schema:
@@ -73,39 +75,36 @@ router.get('/', getAllEvents);
  *                 message:
  *                   type: string
  *                 data:
- *                   $ref: '#/components/schemas/Event'
+ *                   $ref: '#/components/schemas/User'
  */
-router.post('/', createEvent);
-
+router.post('/', createUser);
 
 /**
  * @openapi
- * /events/{id}:
+ * /users/{id}:
  *   put:
- *     summary: Update an existing event
- *     tags: [Events]
+ *     summary: Update user information
+ *     tags: [Users]
  *     parameters:
  *       - in: path
  *         name: id
  *         schema:
  *           type: integer
  *         required: true
- *         description: The event ID
+ *         description: The user ID
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
  *             type: object
- *             required:
- *               - name
  *             properties:
  *               name:
  *                 type: string
- *                 example: Updated Jazz Night
+ *                 example: Jane Doe Updated
  *     responses:
  *       200:
- *         description: Event updated successfully
+ *         description: User updated successfully
  *         content:
  *           application/json:
  *             schema:
@@ -114,27 +113,26 @@ router.post('/', createEvent);
  *                 message:
  *                   type: string
  *                 data:
- *                   $ref: '#/components/schemas/Event'
+ *                   $ref: '#/components/schemas/User'
  */
-router.put('/:id', updateEvent);
-
+router.put('/:id', updateUser);
 
 /**
  * @openapi
- * /events/{id}:
+ * /users/{id}:
  *   delete:
- *     summary: Delete an event
- *     tags: [Events]
+ *     summary: Delete a user
+ *     tags: [Users]
  *     parameters:
  *       - in: path
  *         name: id
  *         schema:
  *           type: integer
  *         required: true
- *         description: The event ID
+ *         description: The user ID
  *     responses:
  *       200:
- *         description: Event deleted successfully
+ *         description: User deleted successfully
  *         content:
  *           application/json:
  *             schema:
@@ -143,16 +141,15 @@ router.put('/:id', updateEvent);
  *                 message:
  *                   type: string
  *                 data:
- *                   $ref: '#/components/schemas/Event'
+ *                   $ref: '#/components/schemas/User'
  */
-router.delete('/:id', deleteEvent);
-
+router.delete('/:id', deleteUser);
 
 /**
  * @openapi
  * components:
  *   schemas:
- *     Event:
+ *     User:
  *       type: object
  *       properties:
  *         id:
@@ -160,7 +157,13 @@ router.delete('/:id', deleteEvent);
  *           example: 1
  *         name:
  *           type: string
- *           example: Jazz Night
+ *           example: John Doe
+ *         email:
+ *           type: string
+ *           example: john@example.com
+ *         role:
+ *           type: string
+ *           example: attendee
  */
 
 export default router;
