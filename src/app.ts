@@ -5,7 +5,6 @@ import artistRoutes from "./api/v1/routes/artistRoutes";
 import ticketRoutes from "./api/v1/routes/ticketRoutes";
 import userRoutes from "./api/v1/routes/userRoutes";
 
-
 const app: Express = express();
 
 app.use(express.json());
