@@ -14,7 +14,7 @@ const swaggerOptions: swaggerJsDoc.Options = {
     },
     // path to annotated files
     // **TODO** update to use routes instead of app 
-    apis: ["./src/app.ts"],
+    apis: ["./src/api/v1/routes/*.ts"],
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

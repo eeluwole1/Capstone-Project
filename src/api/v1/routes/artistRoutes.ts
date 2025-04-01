@@ -1,34 +1,29 @@
-import express, { Express } from "express";
+import express from "express";
 import {
-  getAllEvents,
-  createEvent,
-  updateEvent,
-  deleteEvent
-} from "../controllers/eventControllers";
+  getAllArtists,
+  createArtist,
+  updateArtist,
+  deleteArtist
+} from "../controllers/artistController";
 
 const router = express.Router();
-
-router.get('/', getAllEvents);
-router.post('/', createEvent);
-router.put('/:id', updateEvent);
-router.delete('/:id', deleteEvent);
 
 /**
  * @openapi
  * tags:
- *   name: Events
- *   description: API for managing music events
+ *   name: Artists
+ *   description: API for managing artists performing at events
  */
 
 /**
  * @openapi
- * /events:
+ * /artists:
  *   get:
- *     summary: Get all events
- *     tags: [Events]
+ *     summary: Get all artists
+ *     tags: [Artists]
  *     responses:
  *       200:
- *         description: List of events
+ *         description: List of artists
  *         content:
  *           application/json:
  *             schema:
@@ -39,17 +34,16 @@ router.delete('/:id', deleteEvent);
  *                 data:
  *                   type: array
  *                   items:
- *                     $ref: '#/components/schemas/Event'
+ *                     $ref: '#/components/schemas/Artist'
  */
-router.get('/', getAllEvents);
-
+router.get('/', getAllArtists);
 
 /**
  * @openapi
- * /events:
+ * /artists:
  *   post:
- *     summary: Create a new event
- *     tags: [Events]
+ *     summary: Register a new artist
+ *     tags: [Artists]
  *     requestBody:
  *       required: true
  *       content:
@@ -58,13 +52,21 @@ router.get('/', getAllEvents);
  *             type: object
  *             required:
  *               - name
+ *               - genre
+ *               - event_id
  *             properties:
  *               name:
  *                 type: string
- *                 example: Jazz Night
+ *                 example: DJ Beats
+ *               genre:
+ *                 type: string
+ *                 example: EDM
+ *               event_id:
+ *                 type: integer
+ *                 example: 2
  *     responses:
  *       201:
- *         description: Event created successfully
+ *         description: Artist registered successfully
  *         content:
  *           application/json:
  *             schema:
@@ -73,24 +75,23 @@ router.get('/', getAllEvents);
  *                 message:
  *                   type: string
  *                 data:
- *                   $ref: '#/components/schemas/Event'
+ *                   $ref: '#/components/schemas/Artist'
  */
-router.post('/', createEvent);
-
+router.post('/', createArtist);
 
 /**
  * @openapi
- * /events/{id}:
+ * /artists/{id}:
  *   put:
- *     summary: Update an existing event
- *     tags: [Events]
+ *     summary: Update an existing artist
+ *     tags: [Artists]
  *     parameters:
  *       - in: path
  *         name: id
  *         schema:
  *           type: integer
  *         required: true
- *         description: The event ID
+ *         description: The artist ID
  *     requestBody:
  *       required: true
  *       content:
@@ -99,13 +100,17 @@ router.post('/', createEvent);
  *             type: object
  *             required:
  *               - name
+ *               - genre
  *             properties:
  *               name:
  *                 type: string
- *                 example: Updated Jazz Night
+ *                 example: DJ Beats Updated
+ *               genre:
+ *                 type: string
+ *                 example: House
  *     responses:
  *       200:
- *         description: Event updated successfully
+ *         description: Artist updated successfully
  *         content:
  *           application/json:
  *             schema:
@@ -114,27 +119,26 @@ router.post('/', createEvent);
  *                 message:
  *                   type: string
  *                 data:
- *                   $ref: '#/components/schemas/Event'
+ *                   $ref: '#/components/schemas/Artist'
  */
-router.put('/:id', updateEvent);
-
+router.put('/:id', updateArtist);
 
 /**
  * @openapi
- * /events/{id}:
+ * /artists/{id}:
  *   delete:
- *     summary: Delete an event
- *     tags: [Events]
+ *     summary: Delete an artist
+ *     tags: [Artists]
  *     parameters:
  *       - in: path
  *         name: id
  *         schema:
  *           type: integer
  *         required: true
- *         description: The event ID
+ *         description: The artist ID
  *     responses:
  *       200:
- *         description: Event deleted successfully
+ *         description: Artist deleted successfully
  *         content:
  *           application/json:
  *             schema:
@@ -143,16 +147,15 @@ router.put('/:id', updateEvent);
  *                 message:
  *                   type: string
  *                 data:
- *                   $ref: '#/components/schemas/Event'
+ *                   $ref: '#/components/schemas/Artist'
  */
-router.delete('/:id', deleteEvent);
-
+router.delete('/:id', deleteArtist);
 
 /**
  * @openapi
  * components:
  *   schemas:
- *     Event:
+ *     Artist:
  *       type: object
  *       properties:
  *         id:
@@ -160,7 +163,13 @@ router.delete('/:id', deleteEvent);
  *           example: 1
  *         name:
  *           type: string
- *           example: Jazz Night
+ *           example: DJ Beats
+ *         genre:
+ *           type: string
+ *           example: EDM
+ *         event_id:
+ *           type: integer
+ *           example: 2
  */
 
 export default router;
