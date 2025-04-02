@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Request, Response, NextFunction } from "express";
 import {
   fetchAllTickets,
   bookTicket,
@@ -7,29 +7,45 @@ import {
 } from "./../services/ticketService";
 
 // GET /tickets
-export const getAllTickets = (req: Request, res: Response): void => {
-  const tickets = fetchAllTickets();
-  res.status(200).json({ message: "Fetched all tickets", data: tickets });
-};
-
-// POST /tickets
-export const createTicket = (req: Request, res: Response): void => {
-  const { event_id, user_id } = req.body;
-  const newTicket = bookTicket(event_id, user_id);
-  res.status(201).json({ message: "Ticket booked", data: newTicket });
-};
-
-// PUT /tickets/:id
-export const updateTicket = (req: Request, res: Response): void => {
-  const { id } = req.params;
-  const { status } = req.body;
-  const updated = modifyTicket(Number(id), status);
-  res.status(200).json({ message: "Ticket updated", data: updated });
-};
-
-// DELETE /tickets/:id
-export const deleteTicket = (req: Request, res: Response): void => {
-  const { id } = req.params;
-  const deleted = cancelTicket(Number(id));
-  res.status(200).json({ message: "Ticket canceled", data: deleted });
-};
+export const getAllTickets = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const tickets = await fetchAllTickets();
+      res.status(200).json({ message: "Fetched all tickets", data: tickets });
+    } catch (error) {
+      next(error);
+    }
+  };
+  
+  // POST /tickets
+  export const createTicket = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const { event_id, user_id } = req.body;
+      const newTicket = await bookTicket({ event_id, user_id });
+      res.status(201).json({ message: "Ticket booked", data: newTicket });
+    } catch (error) {
+      next(error);
+    }
+  };
+  
+  // PUT /tickets/:id
+  export const updateTicket = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const { id } = req.params;
+      const { status } = req.body;
+      const updated = await modifyTicket(id, { status });
+      res.status(200).json({ message: "Ticket updated", data: updated });
+    } catch (error) {
+      next(error);
+    }
+  };
+  
+  // DELETE /tickets/:id
+  export const deleteTicket = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const { id } = req.params;
+      const deleted = await cancelTicket(id);
+      res.status(200).json({ message: "Ticket canceled", data: deleted });
+    } catch (error) {
+      next(error);
+    }
+  };

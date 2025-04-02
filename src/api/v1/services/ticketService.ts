@@ -1,52 +1,56 @@
-let mockTickets: { id: number; event_id: number; user_id: number; status: string }[] = [];
-let nextTicketId = 1;
+import { db } from "../../../../config/firebaseConfig";
+import { Ticket } from "../types/ticketTypes";
+
+const COLLECTION = "tickets";
 
 /**
  * Get all tickets
  */
-export const fetchAllTickets = (): typeof mockTickets => {
-  return mockTickets;
+export const fetchAllTickets = async (): Promise<Ticket[]> => {
+  const snapshot = await db.collection(COLLECTION).get();
+  return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Ticket));
 };
 
 /**
  * Book a new ticket
  */
-export const bookTicket = (
-  event_id: number,
-  user_id: number
-): { id: number; event_id: number; user_id: number; status: string } => {
-  const newTicket = {
-    id: nextTicketId++,
-    event_id,
-    user_id,
-    status: "booked"
+export const bookTicket = async (data: { event_id: number; user_id: number }): Promise<Ticket> => {
+  const ticket = {
+    event_id: data.event_id,
+    user_id: data.user_id,
+    status: "booked",
   };
-  mockTickets.push(newTicket);
-  return newTicket;
+  const docRef = await db.collection(COLLECTION).add(ticket);
+  return { id: docRef.id, ...ticket };
 };
 
 /**
  * Update a ticket's status
  */
-export const modifyTicket = (
-  id: number,
-  status: string
-): { id: number; event_id: number; user_id: number; status: string } | null => {
-  const index = mockTickets.findIndex(t => t.id === id);
-  if (index === -1) return null;
-  mockTickets[index].status = status;
-  return mockTickets[index];
+export const modifyTicket = async (
+  id: string,
+  updates: { status: string }
+): Promise<Ticket | null> => {
+  const docRef = db.collection(COLLECTION).doc(id);
+  const doc = await docRef.get();
+
+  if (!doc.exists) return null;
+
+  await docRef.update(updates);
+  const updatedDoc = await docRef.get();
+  return { id: updatedDoc.id, ...updatedDoc.data() } as Ticket;
 };
 
 /**
  * Cancel a ticket
  */
-export const cancelTicket = (
-  id: number
-): { id: number; event_id: number; user_id: number; status: string } | null => {
-  const index = mockTickets.findIndex(t => t.id === id);
-  if (index === -1) return null;
-  const canceled = mockTickets[index];
-  mockTickets.splice(index, 1);
-  return canceled;
+export const cancelTicket = async (id: string): Promise<Ticket | null> => {
+  const docRef = db.collection(COLLECTION).doc(id);
+  const doc = await docRef.get();
+
+  if (!doc.exists) return null;
+
+  const deletedTicket = { id: doc.id, ...doc.data() } as Ticket;
+  await docRef.delete();
+  return deletedTicket;
 };
