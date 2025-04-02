@@ -1,36 +1,62 @@
-let mockUsers: { id: number; name: string; email: string; role: string }[] = [];
-let nextUserId = 1;
+import { db } from "../../../../config/firebaseConfig";
 
-export const fetchAllUsers = (): typeof mockUsers => {
-  return mockUsers;
+export type User = {
+  id?: string; // Firestore auto-generated ID
+  name: string;
+  email: string;
+  role: string;
 };
 
-export const addUser = (
+const COLLECTION_NAME = "users";
+
+/**
+ * Fetch all users from Firestore.
+ */
+export const fetchAllUsers = async (): Promise<User[]> => {
+  const snapshot = await db.collection(COLLECTION_NAME).get();
+  return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as User));
+};
+
+/**
+ * Add a new user to Firestore.
+ */
+export const addUser = async (
   name: string,
   email: string,
   role: string
-): { id: number; name: string; email: string; role: string } => {
-  const newUser = { id: nextUserId++, name, email, role };
-  mockUsers.push(newUser);
-  return newUser;
+): Promise<User> => {
+  const newUser = { name, email, role };
+  const docRef = await db.collection(COLLECTION_NAME).add(newUser);
+  return { id: docRef.id, ...newUser };
 };
 
-export const modifyUser = (
-  id: number,
+/**
+ * Update a user’s name in Firestore.
+ */
+export const modifyUser = async (
+  id: string,
   name: string
-): { id: number; name: string; email: string; role: string } | null => {
-  const index = mockUsers.findIndex(user => user.id === id);
-  if (index === -1) return null;
-  mockUsers[index].name = name;
-  return mockUsers[index];
+): Promise<User | null> => {
+  const userRef = db.collection(COLLECTION_NAME).doc(id);
+  const doc = await userRef.get();
+
+  if (!doc.exists) return null;
+
+  await userRef.update({ name });
+  const updatedDoc = await userRef.get();
+  return { id: updatedDoc.id, ...updatedDoc.data() } as User;
 };
 
-export const removeUser = (
-  id: number
-): { id: number; name: string; email: string; role: string } | null => {
-  const index = mockUsers.findIndex(user => user.id === id);
-  if (index === -1) return null;
-  const deletedUser = mockUsers[index];
-  mockUsers.splice(index, 1);
-  return deletedUser;
+/**
+ * Delete a user from Firestore by ID.
+ */
+export const removeUser = async (id: string): Promise<User | null> => {
+  const userRef = db.collection(COLLECTION_NAME).doc(id);
+  const doc = await userRef.get();
+
+  if (!doc.exists) return null;
+
+  const userData = doc.data() as User;
+  await userRef.delete();
+  return { id, ...userData };
 };

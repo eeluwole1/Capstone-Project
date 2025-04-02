@@ -7,7 +7,11 @@ import {
 } from "./../services/artistService";
 
 // GET /artists
-export const getAllArtists = async (req: Request, res: Response, next: NextFunction) => {
+export const getAllArtists = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
       const artists = await fetchAllArtists();
       res.status(200).json({ message: "Fetched all artists", data: artists });
@@ -17,7 +21,11 @@ export const getAllArtists = async (req: Request, res: Response, next: NextFunct
   };
   
   // POST /artists
-  export const createArtist = async (req: Request, res: Response, next: NextFunction) => {
+  export const createArtist = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
       const { name, genre, event_id } = req.body;
       const newArtist = await addArtist({ name, genre, event_id });
@@ -28,11 +36,21 @@ export const getAllArtists = async (req: Request, res: Response, next: NextFunct
   };
   
   // PUT /artists/:id
-  export const updateArtist = async (req: Request, res: Response, next: NextFunction) => {
+  export const updateArtist = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
       const { id } = req.params;
       const { name, genre } = req.body;
       const updated = await modifyArtist(id, { name, genre });
+  
+      if (!updated) {
+        res.status(404).json({ message: "Artist not found" });
+        return;
+      }
+  
       res.status(200).json({ message: "Artist updated", data: updated });
     } catch (error) {
       next(error);
@@ -40,10 +58,20 @@ export const getAllArtists = async (req: Request, res: Response, next: NextFunct
   };
   
   // DELETE /artists/:id
-  export const deleteArtist = async (req: Request, res: Response, next: NextFunction) => {
+  export const deleteArtist = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
       const { id } = req.params;
       const deleted = await removeArtist(id);
+  
+      if (!deleted) {
+        res.status(404).json({ message: "Artist not found" });
+        return;
+      }
+  
       res.status(200).json({ message: "Artist deleted", data: deleted });
     } catch (error) {
       next(error);

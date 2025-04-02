@@ -7,7 +7,11 @@ import {
 } from "../services/eventService";
 
 // GET /events
-export const getAllEvents = async (req: Request, res: Response, next: NextFunction) => {
+export const getAllEvents = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
   try {
     const events = await fetchAllEvents();
     res.status(200).json({ message: "Fetched all events", data: events });
@@ -17,7 +21,11 @@ export const getAllEvents = async (req: Request, res: Response, next: NextFuncti
 };
 
 // POST /events
-export const createEvent = async (req: Request, res: Response, next: NextFunction) => {
+export const createEvent = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
   try {
     const { name, date, location, organizer } = req.body;
     const newEvent = await addEvent({ name, date, location, organizer });
@@ -28,7 +36,11 @@ export const createEvent = async (req: Request, res: Response, next: NextFunctio
 };
 
 // PUT /events/:id
-export const updateEvent = async (req: Request, res: Response, next: NextFunction) => {
+export const updateEvent = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
   try {
     const { id } = req.params;
     const updates = req.body;
@@ -40,7 +52,11 @@ export const updateEvent = async (req: Request, res: Response, next: NextFunctio
 };
 
 // DELETE /events/:id
-export const deleteEvent = async (req: Request, res: Response, next: NextFunction) => {
+export const deleteEvent = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
   try {
     const { id } = req.params;
     const deleted = await removeEvent(id);
