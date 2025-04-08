@@ -5,6 +5,8 @@ import {
   modifyTicket,
   cancelTicket,
 } from "./../services/ticketService";
+import { generateTicketPDF } from "./../services/pdfService";
+
 
 // GET /tickets
 export const getAllTickets = async (
@@ -29,7 +31,18 @@ export const getAllTickets = async (
     try {
       const { event_id, user_id } = req.body;
       const newTicket = await bookTicket({ event_id, user_id });
-      res.status(201).json({ message: "Ticket booked", data: newTicket });
+
+       // Generate PDF
+    const pdfPath = await generateTicketPDF({
+      ticketId: newTicket.id,
+      eventName: "Event Name Placeholder",
+      date: new Date().toISOString(),
+      userName: `User #${user_id}`, 
+      location: "Venue Placeholder"
+    });
+
+
+      res.status(201).json({ message: "Ticket booked", data: newTicket, pdf: pdfPath });
     } catch (error) {
       next(error);
     }
