@@ -6,3 +6,11 @@ export interface Ticket {
     status: string;
   }
   
+  export interface TicketData {
+    ticketId: string;
+    eventName: string;
+    date: string;
+    userName: string;
+    location: string;
+  }
+
