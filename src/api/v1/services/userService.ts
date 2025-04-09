@@ -1,7 +1,7 @@
 import { db } from "../../../../config/firebaseConfig";
 
 export type User = {
-  id?: string; // Firestore auto-generated ID
+  id?: string;
   name: string;
   email: string;
   role: string;
