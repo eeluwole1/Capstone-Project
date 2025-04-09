@@ -4,6 +4,8 @@ import eventRoutes from "./api/v1/routes/eventRoutes";
 import artistRoutes from "./api/v1/routes/artistRoutes";
 import ticketRoutes from "./api/v1/routes/ticketRoutes";
 import userRoutes from "./api/v1/routes/userRoutes";
+import errorHandler from "./api/v1/middleware/errorHandler";
+
 
 const app: Express = express();
 
@@ -23,5 +25,7 @@ app.get("/api/v1/health", (req, res) => {
     version: "1.0.0"
   });
   });
+
+app.use(errorHandler);
 
 export default app;
