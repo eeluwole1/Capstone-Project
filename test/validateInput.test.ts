@@ -41,7 +41,7 @@ describe("Ticket API Validation Tests", () => {
 
   describe("PUT /api/v1/tickets/:id", () => {
     it("should return 200 and update ticket if status is valid", async () => {
-      // Step 1: Create a valid ticket
+      // Create a valid ticket
       const createRes = await request(app).post("/api/v1/tickets").send({
         event_id: 999,
         user_id: 888,
@@ -51,7 +51,7 @@ describe("Ticket API Validation Tests", () => {
 
       const ticketId = createRes.body.data.id;
 
-      // Step 2: Update the status of the created ticket
+      //Update the status of the created ticket
       const updateRes = await request(app)
         .put(`/api/v1/tickets/${ticketId}`)
         .send({ status: "canceled" });
@@ -59,6 +59,7 @@ describe("Ticket API Validation Tests", () => {
       expect(updateRes.status).toBe(200);
       expect(updateRes.body.message).toBe("Ticket updated");
       expect(updateRes.body.data.status).toBe("canceled");
+
     });
   });
 });
