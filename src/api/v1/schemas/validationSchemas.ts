@@ -11,6 +11,7 @@ export const artistSchema: ObjectSchema = Joi.object({
 export const ticketSchema: ObjectSchema  = Joi.object({
   event_id: Joi.number().required(),
   user_id: Joi.number().required(),
+  email: Joi.string().email().optional()
 });
 
 export const updateTicketStatusSchema: ObjectSchema  = Joi.object({

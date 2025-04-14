@@ -7,6 +7,7 @@ import {
 } from "./../services/ticketService";
 import { generateTicketPDF } from "./../services/pdfService";
 import { ServiceError } from "../errors/errors";
+import { sendTicketEmail } from "../services/emailService";
 
 
 // GET /tickets
@@ -30,7 +31,7 @@ export const getAllTickets = async (
     next: NextFunction
   ): Promise<void> => {
     try {
-      const { event_id, user_id } = req.body;
+      const { event_id, user_id, email} = req.body;
       const newTicket = await bookTicket({ event_id, user_id });
 
        // Generate PDF
@@ -42,12 +43,26 @@ export const getAllTickets = async (
       location: "Venue Placeholder"
     });
 
+// Send email with PDF (optional: check if email is provided)
+if (email) {
+  await sendTicketEmail(
+    email,
+    "Your Ticket Confirmation",
+    "Thank you for booking. Please find your ticket attached.",
+    pdfPath
+  );
+}
 
-      res.status(201).json({ message: "Ticket booked", data: newTicket, pdf: pdfPath });
-    } catch (error) {
-      next(error);
-    }
-  };
+res.status(201).json({
+  message: "Ticket booked",
+  data: newTicket,
+  pdf: pdfPath,
+  ...(email && { emailStatus: "Confirmation sent to " + email }),
+});
+} catch (error) {
+next(error);
+}
+};
   
   // PUT /tickets/:id
   export const updateTicket = async (
