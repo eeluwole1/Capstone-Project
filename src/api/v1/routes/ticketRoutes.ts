@@ -5,6 +5,12 @@ import {
   updateTicket,
   deleteTicket
 } from "../controllers/ticketController";
+import { validateInput } from "../middleware/validateInput";
+import {
+  ticketSchema,
+  updateTicketStatusSchema
+} from "../schemas/validationSchemas";
+
 
 const router = express.Router();
 
@@ -36,7 +42,7 @@ const router = express.Router();
  *                   items:
  *                     $ref: '#/components/schemas/Ticket'
  */
-router.get('/', getAllTickets);
+router.get("/", getAllTickets);
 
 /**
  * @openapi
@@ -73,7 +79,7 @@ router.get('/', getAllTickets);
  *                 data:
  *                   $ref: '#/components/schemas/Ticket'
  */
-router.post('/', createTicket);
+router.post("/", validateInput(ticketSchema), createTicket);
 
 /**
  * @openapi
@@ -113,7 +119,7 @@ router.post('/', createTicket);
  *                 data:
  *                   $ref: '#/components/schemas/Ticket'
  */
-router.put('/:id', updateTicket);
+router.put("/:id", validateInput(updateTicketStatusSchema), updateTicket);
 
 /**
  * @openapi
@@ -125,7 +131,7 @@ router.put('/:id', updateTicket);
  *       - in: path
  *         name: id
  *         schema:
- *           type: integer
+ *           type: string
  *         required: true
  *         description: The ticket ID
  *     responses:
@@ -141,7 +147,7 @@ router.put('/:id', updateTicket);
  *                 data:
  *                   $ref: '#/components/schemas/Ticket'
  */
-router.delete('/:id', deleteTicket);
+router.delete("/:id", deleteTicket);
 
 /**
  * @openapi
@@ -151,7 +157,7 @@ router.delete('/:id', deleteTicket);
  *       type: object
  *       properties:
  *         id:
- *           type: integer
+ *           type: string
  *           example: 101
  *         event_id:
  *           type: integer

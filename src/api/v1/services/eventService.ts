@@ -1,27 +1,43 @@
-let mockEvents: { id: number; name: string }[] = [];
-let nextId = 1;
+import { db } from "../../../../config/firebaseConfig";
 
-export const fetchAllEvents = (): { id: number; name: string }[] => {
-  return mockEvents;
+interface EventData {
+  name: string;
+  date: string;
+  location: string;
+  organizer: string;
+}
+
+// Collection name in Firestore
+const COLLECTION_NAME = "events";
+
+// GET: Fetch all events
+export const fetchAllEvents = async (): Promise<any[]> => {
+  const snapshot = await db.collection(COLLECTION_NAME).get();
+  return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 };
 
-export const addEvent = (name: string): { id: number; name: string } => {
-  const newEvent = { id: nextId++, name };
-  mockEvents.push(newEvent);
-  return newEvent;
+// POST: Add a new event
+export const addEvent = async (event: EventData): Promise<any> => {
+  const docRef = await db.collection(COLLECTION_NAME).add(event);
+  const newDoc = await docRef.get();
+  return { id: docRef.id, ...newDoc.data() };
 };
 
-export const modifyEvent = (id: number, name: string): { id: number; name: string } | null => {
-  const index = mockEvents.findIndex(e => e.id === id);
-  if (index === -1) return null;
-  mockEvents[index].name = name;
-  return mockEvents[index];
+// PUT: Update an existing event
+export const modifyEvent = async (id: string, updates: Partial<EventData>): Promise<any> => {
+  const docRef = db.collection(COLLECTION_NAME).doc(id);
+  await docRef.update(updates);
+  const updatedDoc = await docRef.get();
+  return { id: docRef.id, ...updatedDoc.data() };
 };
 
-export const removeEvent = (id: number): { id: number; name: string } | null => {
-  const index = mockEvents.findIndex(e => e.id === id);
-  if (index === -1) return null;
-  const deleted = mockEvents[index];
-  mockEvents.splice(index, 1);
-  return deleted;
+// DELETE: Remove an event
+export const removeEvent = async (id: string): Promise<any> => {
+  const docRef = db.collection(COLLECTION_NAME).doc(id);
+  const doc = await docRef.get();
+  if (!doc.exists) {
+    throw new Error("Event not found");
+  }
+  await docRef.delete();
+  return { id: doc.id, ...doc.data() };
 };

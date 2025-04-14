@@ -4,13 +4,21 @@ import app from "../src/app";
 describe("Events API", () => {
   let eventId = "";
 
+  const eventData = {
+    name: "Test Event",
+    date: "2025-06-01",
+    location: "Test City",
+    organizer: "Royal Wolesax"
+  };
+
   it("should create a new event", async () => {
     const response = await request(app)
       .post("/api/v1/events")
-      .send({ name: "Test Event", date: "2025-06-01", location: "Test City" });
+      .send(eventData);
 
     expect(response.status).toBe(201);
     expect(response.body.data).toHaveProperty("id");
+    expect(response.body.data.name).toBe(eventData.name);
     eventId = response.body.data.id;
   });
 
@@ -32,5 +40,6 @@ describe("Events API", () => {
   it("should delete an event", async () => {
     const response = await request(app).delete(`/api/v1/events/${eventId}`);
     expect(response.status).toBe(200);
+    expect(response.body.message).toMatch(/deleted/i);
   });
 });
