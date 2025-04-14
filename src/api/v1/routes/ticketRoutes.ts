@@ -131,7 +131,7 @@ router.put("/:id", validateInput(updateTicketStatusSchema), updateTicket);
  *       - in: path
  *         name: id
  *         schema:
- *           type: integer
+ *           type: string
  *         required: true
  *         description: The ticket ID
  *     responses:
@@ -157,7 +157,7 @@ router.delete("/:id", deleteTicket);
  *       type: object
  *       properties:
  *         id:
- *           type: integer
+ *           type: string
  *           example: 101
  *         event_id:
  *           type: integer

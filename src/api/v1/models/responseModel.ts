@@ -18,9 +18,12 @@ export const successResponse = <T>(
 
 export const errorResponse = (
 	message: string,
-	code?: string
+	code?: string,
+    details?: string[]
 ): ApiResponse<null> => ({
 	status: "error",
 	message,
 	code,
+    details
+
 });

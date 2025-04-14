@@ -6,6 +6,7 @@ import {
   cancelTicket,
 } from "./../services/ticketService";
 import { generateTicketPDF } from "./../services/pdfService";
+import { ServiceError } from "../errors/errors";
 
 
 // GET /tickets
@@ -60,9 +61,8 @@ export const getAllTickets = async (
       const updated = await modifyTicket(id, { status });
   
       if (!updated) {
-        res.status(404).json({ message: "Ticket not found" });
-        return;
-      }
+        throw new ServiceError("Ticket not found", "NOT_FOUND");
+    }
   
       res.status(200).json({ message: "Ticket updated", data: updated });
     } catch (error) {
@@ -81,8 +81,7 @@ export const getAllTickets = async (
       const deleted = await cancelTicket(id);
   
       if (!deleted) {
-        res.status(404).json({ message: "Ticket not found" });
-        return;
+        throw new ServiceError("Ticket not found", "NOT_FOUND");
       }
   
       res.status(200).json({ message: "Ticket canceled", data: deleted });

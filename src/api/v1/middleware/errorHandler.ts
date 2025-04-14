@@ -23,7 +23,13 @@ const errorHandler: ErrorRequestHandler = (
 
   // Handle Validation Errors
   if (err instanceof ValidationError) {
-    res.status(err.statusCode).json(errorResponse(err.message, err.code));
+    const details = err.details || [];
+    res.status(err.statusCode).json({
+      status: "error",
+      message: err.message,
+      code: err.code,
+      details
+    });
     return;
   }
 

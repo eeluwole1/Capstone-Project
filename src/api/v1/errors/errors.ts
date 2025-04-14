@@ -38,17 +38,20 @@ export class AppError extends Error {
   /**
    * Thrown for issues originating from the repository layer.
    */
-  export class RepositoryError extends AppError {
-    constructor(message = "Repository error") {
-      super(message, 500);
-    }
-  }
-  
-  
   export class ServiceError extends Error {
-    constructor(message: string) {
+    code: string;
+  
+    constructor(message: string, code = "SERVICE_ERROR") {
       super(message);
-      this.name = "ServiceError";
+      this.code = code;
     }
   }
   
+  export class RepositoryError extends Error {
+    code: string;
+  
+    constructor(message: string, code = "REPO_ERROR") {
+      super(message);
+      this.code = code;
+    }
+  }
