@@ -17,13 +17,22 @@ export const getAllTickets = async (
     next: NextFunction
   ): Promise<void> => {
     try {
-      const tickets = await fetchAllTickets();
-      res.status(200).json({ message: "Fetched all tickets", data: tickets });
-    } catch (error) {
-      next(error);
-    }
-  };
-  
+      const { status, sortBy } = req.query;
+
+    // Convert to string and build filters object
+    const filters = {
+      ...(status && { status: String(status) }),
+      ...(sortBy && { sortBy: String(sortBy) }),
+    };
+
+    const tickets = await fetchAllTickets(filters);
+    res.status(200).json({ message: "Fetched all tickets", data: tickets });
+  } catch (error) {
+    next(error);
+  }
+};
+
+
   // POST /tickets
   export const createTicket = async (
     req: Request,
@@ -43,7 +52,7 @@ export const getAllTickets = async (
       location: "Venue Placeholder"
     });
 
-// Send email with PDF (optional: check if email is provided)
+// Send email with PDF
 if (email) {
   await sendTicketEmail(
     email,

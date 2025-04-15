@@ -4,6 +4,7 @@ export interface Ticket {
     event_id: number;
     user_id: number;
     status: string;
+    createdAt: string;
   }
   
   export interface TicketData {

@@ -3,13 +3,27 @@ import { Ticket } from "../types/ticketTypes";
 
 const COLLECTION = "tickets";
 
+
 /**
- * Get all tickets
+ * Get all tickets with filtering and sorting
  */
-export const fetchAllTickets = async (): Promise<Ticket[]> => {
-  const snapshot = await db.collection(COLLECTION).get();
+export const fetchAllTickets = async (
+  filters: { status?: string; sortBy?: string } = {}
+): Promise<Ticket[]> => {
+  let query: FirebaseFirestore.Query = db.collection("tickets");
+
+  if (filters.status) {
+    query = query.where("status", "==", filters.status);
+  }
+
+  if (filters.sortBy) {
+    query = query.orderBy(filters.sortBy, "asc");
+  }
+
+  const snapshot = await query.get();
   return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Ticket));
 };
+
 
 /**
  * Book a new ticket
@@ -19,6 +33,7 @@ export const bookTicket = async (data: { event_id: number; user_id: number }): P
     event_id: data.event_id,
     user_id: data.user_id,
     status: "booked",
+    createdAt: new Date().toISOString(),
   };
   const docRef = await db.collection(COLLECTION).add(ticket);
   return { id: docRef.id, ...ticket };
