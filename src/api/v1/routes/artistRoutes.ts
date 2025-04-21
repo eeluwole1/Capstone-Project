@@ -5,6 +5,8 @@ import {
   updateArtist,
   deleteArtist
 } from "../controllers/artistController";
+import authenticate from "../middleware/authenticate";
+import authorize from "../middleware/authorize";
 
 const router = express.Router();
 
@@ -21,6 +23,8 @@ const router = express.Router();
  *   get:
  *     summary: Get all artists
  *     tags: [Artists]
+ *     security:
+ *       - bearerAuth: []
  *     responses:
  *       200:
  *         description: List of artists
@@ -36,7 +40,7 @@ const router = express.Router();
  *                   items:
  *                     $ref: '#/components/schemas/Artist'
  */
-router.get('/', getAllArtists);
+router.get("/", authenticate, getAllArtists);
 
 /**
  * @openapi
@@ -44,6 +48,8 @@ router.get('/', getAllArtists);
  *   post:
  *     summary: Register a new artist
  *     tags: [Artists]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -77,7 +83,7 @@ router.get('/', getAllArtists);
  *                 data:
  *                   $ref: '#/components/schemas/Artist'
  */
-router.post('/', createArtist);
+router.post("/", authenticate, authorize({ hasRole: ["admin"] }), createArtist);
 
 /**
  * @openapi
@@ -85,6 +91,8 @@ router.post('/', createArtist);
  *   put:
  *     summary: Update an existing artist
  *     tags: [Artists]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -121,7 +129,7 @@ router.post('/', createArtist);
  *                 data:
  *                   $ref: '#/components/schemas/Artist'
  */
-router.put('/:id', updateArtist);
+router.put("/:id", authenticate, authorize({ hasRole: ["admin"] }), updateArtist);
 
 /**
  * @openapi
@@ -129,6 +137,8 @@ router.put('/:id', updateArtist);
  *   delete:
  *     summary: Delete an artist
  *     tags: [Artists]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -149,27 +159,6 @@ router.put('/:id', updateArtist);
  *                 data:
  *                   $ref: '#/components/schemas/Artist'
  */
-router.delete('/:id', deleteArtist);
-
-/**
- * @openapi
- * components:
- *   schemas:
- *     Artist:
- *       type: object
- *       properties:
- *         id:
- *           type: integer
- *           example: 1
- *         name:
- *           type: string
- *           example: DJ Beats
- *         genre:
- *           type: string
- *           example: EDM
- *         event_id:
- *           type: integer
- *           example: 2
- */
+router.delete("/:id", authenticate, authorize({ hasRole: ["admin"] }), deleteArtist);
 
 export default router;

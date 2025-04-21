@@ -1,10 +1,12 @@
-import express, { Express } from "express";
+import express from "express";
 import {
   getAllEvents,
   createEvent,
   updateEvent,
   deleteEvent
 } from "../controllers/eventControllers";
+import authenticate from "../middleware/authenticate";
+import authorize from "../middleware/authorize";
 
 const router = express.Router();
 
@@ -50,6 +52,8 @@ router.get('/', getAllEvents);
  *   post:
  *     summary: Create a new event
  *     tags: [Events]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -75,7 +79,7 @@ router.get('/', getAllEvents);
  *                 data:
  *                   $ref: '#/components/schemas/Event'
  */
-router.post('/', createEvent);
+router.post('/', authenticate, authorize({ hasRole: ["admin"] }), createEvent);
 
 
 /**
@@ -84,6 +88,8 @@ router.post('/', createEvent);
  *   put:
  *     summary: Update an existing event
  *     tags: [Events]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -116,7 +122,7 @@ router.post('/', createEvent);
  *                 data:
  *                   $ref: '#/components/schemas/Event'
  */
-router.put('/:id', updateEvent);
+router.put('/:id', authenticate, authorize({ hasRole: ["admin"] }), updateEvent);
 
 
 /**
@@ -125,6 +131,8 @@ router.put('/:id', updateEvent);
  *   delete:
  *     summary: Delete an event
  *     tags: [Events]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -145,7 +153,7 @@ router.put('/:id', updateEvent);
  *                 data:
  *                   $ref: '#/components/schemas/Event'
  */
-router.delete('/:id', deleteEvent);
+router.delete('/:id', authenticate, authorize({ hasRole: ["admin"] }), deleteEvent);
 
 
 /**
