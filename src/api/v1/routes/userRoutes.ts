@@ -5,6 +5,8 @@ import {
   updateUser,
   deleteUser
 } from "../controllers/userController";
+import authenticate from "../middleware/authenticate";
+import authorize from "../middleware/authorize";
 
 const router = express.Router();
 
@@ -21,22 +23,13 @@ const router = express.Router();
  *   get:
  *     summary: Get all users
  *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
  *     responses:
  *       200:
  *         description: List of users
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                 data:
- *                   type: array
- *                   items:
- *                     $ref: '#/components/schemas/User'
  */
-router.get('/', getAllUsers);
+router.get("/", authenticate, authorize({ hasRole: ["admin"] }), getAllUsers);
 
 /**
  * @openapi
@@ -44,40 +37,10 @@ router.get('/', getAllUsers);
  *   post:
  *     summary: Create a new user
  *     tags: [Users]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - name
- *               - email
- *               - role
- *             properties:
- *               name:
- *                 type: string
- *                 example: Jane Doe
- *               email:
- *                 type: string
- *                 example: jane@example.com
- *               role:
- *                 type: string
- *                 example: organizer
- *     responses:
- *       201:
- *         description: User created successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                 data:
- *                   $ref: '#/components/schemas/User'
+ *     security:
+ *       - bearerAuth: []
  */
-router.post('/', createUser);
+router.post("/", authenticate, authorize({ hasRole: ["admin"] }), createUser);
 
 /**
  * @openapi
@@ -85,37 +48,10 @@ router.post('/', createUser);
  *   put:
  *     summary: Update user information
  *     tags: [Users]
- *     parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: integer
- *         required: true
- *         description: The user ID
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               name:
- *                 type: string
- *                 example: Jane Doe Updated
- *     responses:
- *       200:
- *         description: User updated successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                 data:
- *                   $ref: '#/components/schemas/User'
+ *     security:
+ *       - bearerAuth: []
  */
-router.put('/:id', updateUser);
+router.put("/:id", authenticate, authorize({ hasRole: ["admin"] }), updateUser);
 
 /**
  * @openapi
@@ -123,27 +59,10 @@ router.put('/:id', updateUser);
  *   delete:
  *     summary: Delete a user
  *     tags: [Users]
- *     parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: integer
- *         required: true
- *         description: The user ID
- *     responses:
- *       200:
- *         description: User deleted successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                 data:
- *                   $ref: '#/components/schemas/User'
+ *     security:
+ *       - bearerAuth: []
  */
-router.delete('/:id', deleteUser);
+router.delete("/:id", authenticate, authorize({ hasRole: ["admin"] }), deleteUser);
 
 /**
  * @openapi
@@ -154,16 +73,12 @@ router.delete('/:id', deleteUser);
  *       properties:
  *         id:
  *           type: integer
- *           example: 1
  *         name:
  *           type: string
- *           example: John Doe
  *         email:
  *           type: string
- *           example: john@example.com
  *         role:
  *           type: string
- *           example: attendee
  */
 
 export default router;

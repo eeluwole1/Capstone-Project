@@ -55,3 +55,17 @@ export class AppError extends Error {
       this.code = code;
     }
   }
+  export class AuthenticationError extends AppError {
+    constructor(message = "Authentication failed", code = "AUTH_ERROR") {
+      super(message, 401);
+      this.code = code;
+    }
+  }
+  
+  export class AuthorizationError extends AppError {
+    constructor(message = "Not authorized", code = "FORBIDDEN") {
+      super(message, 403);
+      this.code = code;
+    }
+  }
+  

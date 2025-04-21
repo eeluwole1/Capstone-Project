@@ -1,6 +1,9 @@
 import request from "supertest";
 import app from "../src/app";
 import * as userService from "../src/api/v1/services/userService";
+jest.mock("../src/api/v1/middleware/authenticate");
+jest.mock("../src/api/v1/middleware/authorize");
+
 
 jest.mock("../src/api/v1/services/userService");
 

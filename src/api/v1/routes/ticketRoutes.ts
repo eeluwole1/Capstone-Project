@@ -5,6 +5,8 @@ import {
   updateTicket,
   deleteTicket
 } from "../controllers/ticketController";
+import authenticate from "../middleware/authenticate";
+import authorize from "../middleware/authorize";
 import { validateInput } from "../middleware/validateInput";
 import {
   ticketSchema,
@@ -27,6 +29,8 @@ const router = express.Router();
  *   get:
  *     summary: Get all tickets
  *     tags: [Tickets]
+ *     security:
+ *       - bearerAuth: []
  *     responses:
  *       200:
  *         description: List of tickets
@@ -42,7 +46,7 @@ const router = express.Router();
  *                   items:
  *                     $ref: '#/components/schemas/Ticket'
  */
-router.get("/", getAllTickets);
+router.get("/", authenticate, getAllTickets);
 
 /**
  * @openapi
@@ -50,6 +54,8 @@ router.get("/", getAllTickets);
  *   post:
  *     summary: Book a ticket
  *     tags: [Tickets]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -79,7 +85,7 @@ router.get("/", getAllTickets);
  *                 data:
  *                   $ref: '#/components/schemas/Ticket'
  */
-router.post("/", validateInput(ticketSchema), createTicket);
+router.post("/", authenticate, validateInput(ticketSchema), createTicket);
 
 /**
  * @openapi
@@ -87,11 +93,13 @@ router.post("/", validateInput(ticketSchema), createTicket);
  *   put:
  *     summary: Update a ticket
  *     tags: [Tickets]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
  *         schema:
- *           type: integer
+ *           type: string
  *         required: true
  *         description: The ticket ID
  *     requestBody:
@@ -119,7 +127,7 @@ router.post("/", validateInput(ticketSchema), createTicket);
  *                 data:
  *                   $ref: '#/components/schemas/Ticket'
  */
-router.put("/:id", validateInput(updateTicketStatusSchema), updateTicket);
+router.put("/:id", authenticate,authorize({hasRole: ["admin"]}), validateInput(updateTicketStatusSchema), updateTicket);
 
 /**
  * @openapi
@@ -127,6 +135,8 @@ router.put("/:id", validateInput(updateTicketStatusSchema), updateTicket);
  *   delete:
  *     summary: Cancel a ticket
  *     tags: [Tickets]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -147,7 +157,7 @@ router.put("/:id", validateInput(updateTicketStatusSchema), updateTicket);
  *                 data:
  *                   $ref: '#/components/schemas/Ticket'
  */
-router.delete("/:id", deleteTicket);
+router.delete("/:id", authenticate, authorize({hasRole: ["admin"]}), deleteTicket);
 
 /**
  * @openapi
@@ -168,6 +178,10 @@ router.delete("/:id", deleteTicket);
  *         status:
  *           type: string
  *           example: booked
+ *         createdAt:
+ *           type: string
+ *           format: date-time
+ *           example: "2025-04-15T22:31:42.855Z"
  */
 
 export default router;

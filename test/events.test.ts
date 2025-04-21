@@ -1,6 +1,22 @@
 import request from "supertest";
 import app from "../src/app";
 
+jest.mock("../src/api/v1/middleware/authenticate", () => ({
+  __esModule: true,
+  default: (_req: any, res: any, next: any) => {
+    res.locals.uid = "mock-user";
+    res.locals.role = "admin";
+    next();
+  }
+}));
+
+jest.mock("../src/api/v1/middleware/authorize", () => ({
+  __esModule: true,
+  default: () => (_req: any, _res: any, next: any) => {
+    next();
+  }
+}));
+
 describe("Events API", () => {
   let eventId = "";
 
