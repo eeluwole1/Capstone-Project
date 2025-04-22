@@ -8,13 +8,11 @@ const swaggerOptions: swaggerJsDoc.Options = {
     definition: {
         openapi: "3.0.0",
         info: {
-            title: "Music Event API",
+            title: "Music Events Management API Documentation",
             version: "1.0.0",
-            description: 'API docs for event organizers, artists & attendees'
+            description: "This is the API documentation for music events management application"
         },
-    },
-    // path to annotated files
-    // **TODO** update to use routes instead of app 
+    }, 
     apis: ["./src/api/v1/routes/*.ts"],
 };
 
