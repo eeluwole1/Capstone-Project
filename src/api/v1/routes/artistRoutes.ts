@@ -161,4 +161,25 @@ router.put("/:id", authenticate, authorize({ hasRole: ["admin"] }), updateArtist
  */
 router.delete("/:id", authenticate, authorize({ hasRole: ["admin"] }), deleteArtist);
 
+/**
+ * @openapi
+ * components:
+ *   schemas:
+ *     Artist:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: string
+ *           example: "abc123"
+ *         name:
+ *           type: string
+ *           example: "Royal Wolesax"
+ *         genre:
+ *           type: string
+ *           example: "Jazz"
+ *         event_id:
+ *           type: integer
+ *           example: 101
+ */
+
 export default router;
