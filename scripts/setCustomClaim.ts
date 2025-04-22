@@ -10,6 +10,6 @@ const setCustomUserRole = async (uid: string, role: "admin" | "user") => {
   };
   
 
-  setCustomUserRole("uid-for-admin", "admin");
-  setCustomUserRole("uid-for-user", "user");
+  setCustomUserRole("ypjHlulK9LdyCLpr6acjNosuftv1", "admin");
+  setCustomUserRole("hgRHa6oISke38uDRWHq5UY1bror1", "user");
   

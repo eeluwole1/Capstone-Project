@@ -1,4 +1,3 @@
-// src/utils/errorUtils.ts
 
 import { HTTP_STATUS } from "../../../constants/httpConstants";
 import { UNKNOWN_ERROR_CODE } from "../../../constants/errorConstants";
