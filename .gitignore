@@ -1,11 +1,38 @@
+# Node.js dependencies
 node_modules/
+
+# Compiled output and test coverage
+dist/
+coverage/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment variables and secret credentials
+.env
+*.env.*
+*.secret.*
+*.local
+cred.txt
+*.json
 
 back-end-project-3a1c1-firebase-adminsdk-fbsvc-9568123341.json/
 
-.env
+# Firebase config and emulation
+firebase-debug.log
+.firebaserc
+firebase.*
+**/back-end-project-3a1c1-firebase-adminsdk-*.json
 
-dist/
+# API documentation and generated files
+openapi.json
+api-docs/
 
-cred.txt
-
+# VSCode project settings
 .vscode/
+
+# OS-specific junk
+.DS_Store
+Thumbs.db
