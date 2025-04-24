@@ -9,9 +9,9 @@
   "scripts": {
     "start": "ts-node src/server.ts",
     "build": "tsc",
-    "test": "jest",
+    "test": "NODE_ENV=test jest",
     "dev": "ts-node-dev --respawn src/server.ts",
-    "test:watch": "jest --watch",
+    "test:watch": "NODE_ENV=test jest --watch",
     "generate-docs": "ts-node scripts/generate-openapi.ts && npx @redocly/cli build-docs openapi.json --output api-docs/index.html"
   },
   "keywords": [],
